@@ -1,8 +1,48 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title> </title>
-  </head>
-  <body>
-  </body>
+<head>
+  <title>Signal Intake</title>
+  <style>
+    body { background:#0b0b12; color:#eaeaea; font-family:serif; text-align:center; }
+    input { margin:5px; padding:8px; }
+    button { padding:10px 20px; }
+  </style>
+</head>
+<body>
+
+<h2>Observation Intake — Subject 13</h2>
+<p>Twelve entries required.</p>
+
+<form id="signalForm">
+  <input name="m1" placeholder="January"><br>
+  <input name="m2" placeholder="February"><br>
+  <input name="m3" placeholder="March"><br>
+  <input name="m4" placeholder="April"><br>
+  <input name="m5" placeholder="May"><br>
+  <input name="m6" placeholder="June"><br>
+  <input name="m7" placeholder="July"><br>
+  <input name="m8" placeholder="August"><br>
+  <input name="m9" placeholder="September"><br>
+  <input name="m10" placeholder="October"><br>
+  <input name="m11" placeholder="November"><br>
+  <input name="m12" placeholder="December"><br>
+  <button type="submit">Transmit</button>
+</form>
+
+<script>
+const correct = ["i","saw","you","from","the","moon","you","looked","back","without","knowing","why"];
+
+document.getElementById("signalForm").onsubmit = function(e){
+  e.preventDefault();
+  const data = new FormData(this);
+  let values = [...data.values()].map(v => v.toLowerCase().trim());
+  if (values.every((v,i)=>v===correct[i])) {
+    window.location.href = "/404.html";
+  } else {
+    alert("Signal incomplete.");
+  }
+};
+</script>
+
+</body>
 </html>
