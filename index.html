@@ -1,48 +1,161 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Signal Intake</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Subject 13 — The Twelve Months</title>
   <style>
-    body { background:#0b0b12; color:#eaeaea; font-family:serif; text-align:center; }
-    input { margin:5px; padding:8px; }
-    button { padding:10px 20px; }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: radial-gradient(circle at top, #1b1f3b, #050510);
+      color: #eaeaf0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 600px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 0 40px rgba(138,43,226,0.25);
+      backdrop-filter: blur(10px);
+    }
+
+    h1 {
+      text-align: center;
+      letter-spacing: 2px;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 0.9rem;
+      opacity: 0.8;
+      margin-bottom: 30px;
+    }
+
+    .month {
+      display: none;
+      margin-top: 20px;
+    }
+
+    .month.active {
+      display: block;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 0.85rem;
+      opacity: 0.9;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      outline: none;
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+      font-size: 1rem;
+    }
+
+    button {
+      margin-top: 15px;
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      background: linear-gradient(135deg, #7f5cff, #c77dff);
+      color: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 5px 15px rgba(199,125,255,0.4);
+    }
+
+    .feedback {
+      margin-top: 15px;
+      font-size: 0.9rem;
+      text-align: center;
+    }
+
+    .success {
+      color: #7CFF9E;
+    }
+
+    .error {
+      color: #FF7C7C;
+    }
+
+    .sigil {
+      text-align: center;
+      font-size: 2rem;
+      margin-bottom: 15px;
+      opacity: 0.7;
+    }
   </style>
 </head>
 <body>
+  <div class="container">
+    <div class="sigil">♑ ♒ ♓ ♈ ♉ ♊ ♋ ♌ ♍ ♎ ♏ ♐</div>
+    <h1>SUBJECT 13</h1>
+    <div class="subtitle">The path reveals itself only month by month.</div>
 
-<h2>Observation Intake — Subject 13</h2>
-<p>Twelve entries required.</p>
+    <!-- JANUARY -->
+    <div class="month active" id="month-0">
+      <label>January — Speak the first truth</label>
+      <input type="text" id="answer-0" placeholder="Enter the answer" />
+      <button onclick="checkAnswer(0)">Submit</button>
+      <div class="feedback" id="feedback-0"></div>
+    </div>
 
-<form id="signalForm">
-  <input name="m1" placeholder="January"><br>
-  <input name="m2" placeholder="February"><br>
-  <input name="m3" placeholder="March"><br>
-  <input name="m4" placeholder="April"><br>
-  <input name="m5" placeholder="May"><br>
-  <input name="m6" placeholder="June"><br>
-  <input name="m7" placeholder="July"><br>
-  <input name="m8" placeholder="August"><br>
-  <input name="m9" placeholder="September"><br>
-  <input name="m10" placeholder="October"><br>
-  <input name="m11" placeholder="November"><br>
-  <input name="m12" placeholder="December"><br>
-  <button type="submit">Transmit</button>
-</form>
+    <!-- FEBRUARY -->
+    <div class="month" id="month-1">
+      <label>February — What follows the beginning?</label>
+      <input type="text" id="answer-1" placeholder="Enter the answer" />
+      <button onclick="checkAnswer(1)">Submit</button>
+      <div class="feedback" id="feedback-1"></div>
+    </div>
 
-<script>
-const correct = ["i","saw","you","from","the","moon","you","looked","back","without","knowing","why"];
+    <!-- Add more months up to December following this pattern -->
 
-document.getElementById("signalForm").onsubmit = function(e){
-  e.preventDefault();
-  const data = new FormData(this);
-  let values = [...data.values()].map(v => v.toLowerCase().trim());
-  if (values.every((v,i)=>v===correct[i])) {
-    window.location.href = "/404.html";
-  } else {
-    alert("Signal incomplete.");
-  }
-};
-</script>
+  </div>
 
+  <script>
+    const answers = [
+      "JANUARYKEY", // January correct answer
+      "FEBRUARYKEY" // February correct answer
+      // Continue for all 12 months
+    ];
+
+    function checkAnswer(index) {
+      const input = document.getElementById(`answer-${index}`).value.trim().toUpperCase();
+      const feedback = document.getElementById(`feedback-${index}`);
+
+      if (input === answers[index]) {
+        feedback.textContent = "Correct. The next gate opens.";
+        feedback.className = "feedback success";
+
+        const nextMonth = document.getElementById(`month-${index + 1}`);
+        if (nextMonth) {
+          nextMonth.classList.add("active");
+        }
+      } else {
+        feedback.textContent = "Incorrect. Reflect and try again.";
+        feedback.className = "feedback error";
+      }
+    }
+  </script>
 </body>
 </html>
