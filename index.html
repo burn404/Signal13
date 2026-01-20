@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Transmission</title>
+<title>Signal Archive</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 html, body {
   margin: 0;
   padding: 0;
-  background: #000;
+  background: radial-gradient(circle at top, #050714, #000);
   color: #eaeaff;
   font-family: "Courier New", monospace;
   overflow-x: hidden;
@@ -21,46 +21,64 @@ body::before {
   position:fixed;
   inset:0;
   background:
-    radial-gradient(1px 1px at 20% 30%, #fff, transparent),
-    radial-gradient(1px 1px at 80% 40%, #fff, transparent),
+    radial-gradient(1px 1px at 10% 20%, #fff, transparent),
+    radial-gradient(1px 1px at 80% 30%, #fff, transparent),
     radial-gradient(1px 1px at 50% 70%, #fff, transparent),
-    radial-gradient(2px 2px at 30% 80%, #aaa, transparent);
-  opacity:0.5;
+    radial-gradient(2px 2px at 30% 80%, #aaa, transparent),
+    radial-gradient(1px 1px at 70% 90%, #fff, transparent);
+  opacity:0.6;
+  animation: drift 90s linear infinite;
   z-index:-2;
 }
 
-/* MOON BACKGROUND */
+@keyframes drift {
+  from { transform: translateY(0); }
+  to { transform: translateY(-200px); }
+}
+
+/* LARGE MOON */
 .big-moon {
   position:fixed;
-  top:10%;
-  right:8%;
-  width:140px;
-  height:140px;
-  background:radial-gradient(circle at 30% 30%, #fff, #aaa);
+  top:8%;
+  right:10%;
+  width:160px;
+  height:160px;
+  background: radial-gradient(circle at 30% 30%, #fff, #999);
   border-radius:50%;
   opacity:0.12;
+  filter: blur(1px);
   z-index:-1;
 }
 
+/* CONTAINER */
 .container {
-  max-width:600px;
+  max-width:620px;
   margin:auto;
-  padding:60px 20px;
+  padding:70px 20px 40px;
   text-align:center;
 }
 
+/* MONTH CARD */
 .month {
   display:none;
-  padding:20px;
-  border:1px solid rgba(255,255,255,0.2);
-  border-radius:12px;
-  background:rgba(255,255,255,0.03);
+  padding:22px;
+  border:1px solid rgba(255,255,255,0.25);
+  border-radius:14px;
+  background: rgba(255,255,255,0.04);
+  box-shadow: 0 0 20px rgba(255,255,255,0.04);
 }
 
 .month.active {
   display:block;
+  animation: fadeIn 1s ease;
 }
 
+@keyframes fadeIn {
+  from { opacity:0; transform: translateY(10px); }
+  to { opacity:1; transform: translateY(0); }
+}
+
+/* INPUT */
 input {
   width:80%;
   padding:10px;
@@ -68,46 +86,50 @@ input {
   border:1px solid #666;
   color:#fff;
   text-align:center;
-  letter-spacing:2px;
+  letter-spacing:3px;
 }
 
+/* BUTTON */
 button {
-  margin-top:10px;
-  padding:8px 18px;
+  margin-top:12px;
+  padding:8px 22px;
   background:transparent;
-  border:1px solid #888;
+  border:1px solid #aaa;
   color:#fff;
+  cursor:pointer;
 }
 
+/* FEEDBACK */
 .feedback {
-  margin-top:10px;
+  margin-top:12px;
   font-size:0.85rem;
 }
 
+/* PULSE */
 .pulse {
   animation:pulse 0.6s;
 }
 
 @keyframes pulse {
-  0%{box-shadow:0 0 0 transparent;}
-  50%{box-shadow:0 0 12px rgba(255,255,255,0.5);}
-  100%{box-shadow:0 0 0 transparent;}
+  0% { box-shadow:0 0 0 transparent; }
+  50% { box-shadow:0 0 14px rgba(255,255,255,0.6); }
+  100% { box-shadow:0 0 0 transparent; }
 }
 
 /* PROGRESS MOONS */
 #progress {
   display:flex;
   justify-content:center;
-  gap:6px;
-  margin-top:30px;
+  gap:8px;
+  margin-top:26px;
 }
 
 .progress-moon {
-  width:10px;
-  height:10px;
+  width:12px;
+  height:12px;
   border-radius:50%;
-  background:#fff;
-  opacity:0.25;
+  background: radial-gradient(circle at 30% 30%, #fff, #777);
+  opacity:0.35;
 }
 </style>
 </head>
@@ -117,37 +139,30 @@ button {
 <div class="big-moon"></div>
 
 <div class="container">
-  <div id="months">
 
-    <div class="month active" id="m1">
-      <p>I keep what is not yet lived.</p>
-      <input id="a1">
-      <br><button onclick="check(1)">Transmit</button>
-      <div class="feedback" id="f1"></div>
-    </div>
+  <!-- MONTHS -->
+  <div id="months"></div>
 
-    <div class="month" id="m2">
-      <p>I walk where you do, unseen.</p>
-      <input id="a2">
-      <br><button onclick="check(2)">Transmit</button>
-      <div class="feedback" id="f2"></div>
-    </div>
-
-    <div class="month" id="m3">
-      <p>I burn without hunger.</p>
-      <input id="a3">
-      <br><button onclick="check(3)">Transmit</button>
-      <div class="feedback" id="f3"></div>
-    </div>
-
-    <!-- Continue pattern to m12 -->
-
-  </div>
-
+  <!-- PROGRESS -->
   <div id="progress"></div>
 </div>
 
 <script>
+const riddles = [
+  "I keep what is not yet lived.",
+  "I walk where you do, unseen.",
+  "I burn without hunger.",
+  "I travel, yet stay with you.",
+  "I live, yet remain rooted.",
+  "I am full when you hear the howls.",
+  "I return when you are noticed.",
+  "I meet skin before the world.",
+  "I open what waits quietly.",
+  "I remain when warmth is needed.",
+  "I record what gratitude sees.",
+  "I soften the end of days."
+];
+
 const answers = [
   "YOU",
   "SAW",
@@ -163,31 +178,47 @@ const answers = [
   "WHY"
 ];
 
-function check(n){
-  const input=document.getElementById("a"+n);
-  const feedback=document.getElementById("f"+n);
-  const val=input.value.trim().toUpperCase();
+const monthsContainer = document.getElementById("months");
+
+for (let i = 0; i < 12; i++) {
+  const div = document.createElement("div");
+  div.className = "month" + (i === 0 ? " active" : "");
+  div.id = "m" + (i + 1);
+  div.innerHTML = `
+    <p>${riddles[i]}</p>
+    <input id="a${i+1}">
+    <br>
+    <button onclick="check(${i+1})">Transmit</button>
+    <div class="feedback" id="f${i+1}"></div>
+  `;
+  monthsContainer.appendChild(div);
+}
+
+function check(n) {
+  const input = document.getElementById("a"+n);
+  const feedback = document.getElementById("f"+n);
+  const val = input.value.trim().toUpperCase();
 
   input.classList.remove("pulse");
   void input.offsetWidth;
   input.classList.add("pulse");
 
-  if(val===answers[n-1]){
-    feedback.textContent="Transmission accepted.";
+  if (val === answers[n-1]) {
+    feedback.textContent = "Transmission accepted.";
 
     document.getElementById("m"+n).classList.remove("active");
 
-    const moon=document.createElement("div");
-    moon.className="progress-moon";
+    const moon = document.createElement("div");
+    moon.className = "progress-moon";
     document.getElementById("progress").appendChild(moon);
 
-    if(n<12){
+    if (n < 12) {
       document.getElementById("m"+(n+1)).classList.add("active");
     } else {
-      window.location.href="404.html";
+      window.location.href = "404.html";
     }
   } else {
-    feedback.textContent="Signal rejected.";
+    feedback.textContent = "Signal rejected.";
   }
 }
 </script>
