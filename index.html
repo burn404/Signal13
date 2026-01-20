@@ -1,157 +1,242 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Transmission Log</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<title>Signal Archive</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      background: radial-gradient(circle at top, #0b0f2b, #000);
-      color: #e6e6f0;
-      font-family: "Courier New", monospace;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
+<style>
+html, body {
+  margin: 0;
+  padding: 0;
+  background: #000;
+  color: #eaeaff;
+  font-family: "Courier New", monospace;
+  overflow-x: hidden;
+}
 
-    .container {
-      width: 90%;
-      max-width: 600px;
-      text-align: center;
-    }
+/* STARFIELD */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(1px 1px at 20% 30%, #fff, transparent),
+    radial-gradient(1px 1px at 80% 40%, #fff, transparent),
+    radial-gradient(1px 1px at 50% 70%, #fff, transparent),
+    radial-gradient(2px 2px at 30% 80%, #aaa, transparent),
+    radial-gradient(1px 1px at 70% 20%, #fff, transparent);
+  animation: drift 60s linear infinite;
+  opacity: 0.6;
+  z-index: -2;
+}
 
-    h1 {
-      letter-spacing: 2px;
-      font-size: 1.2rem;
-      opacity: 0.85;
-      margin-bottom: 20px;
-    }
+@keyframes drift {
+  from { transform: translateY(0); }
+  to { transform: translateY(-200px); }
+}
 
-    .month {
-      display: none;
-      margin-top: 30px;
-      padding: 20px;
-      border: 1px solid rgba(255,255,255,0.2);
-      border-radius: 10px;
-      background: rgba(255,255,255,0.03);
-    }
+/* MOON */
+.moon {
+  position: fixed;
+  top: 10%;
+  right: 10%;
+  width: 120px;
+  height: 120px;
+  background: radial-gradient(circle at 30% 30%, #fff, #aaa);
+  border-radius: 50%;
+  opacity: 0.12;
+  z-index: -1;
+}
 
-    .month.active {
-      display: block;
-    }
+/* SUBLIMINAL TEXT */
+.subliminal {
+  position: fixed;
+  bottom: 5%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.7rem;
+  opacity: 0.08;
+  letter-spacing: 3px;
+}
 
-    .riddle {
-      font-size: 0.95rem;
-      margin-bottom: 15px;
-      opacity: 0.9;
-    }
+/* CONTAINER */
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 60px 20px;
+  text-align: center;
+}
 
-    input {
-      width: 80%;
-      padding: 10px;
-      background: #000;
-      border: 1px solid #555;
-      color: #e6e6f0;
-      font-family: inherit;
-      text-align: center;
-      letter-spacing: 1px;
-    }
+h1 {
+  font-size: 1.1rem;
+  letter-spacing: 3px;
+  margin-bottom: 40px;
+}
 
-    button {
-      margin-top: 10px;
-      padding: 8px 16px;
-      background: transparent;
-      border: 1px solid #777;
-      color: #e6e6f0;
-      cursor: pointer;
-    }
+/* MONTH BLOCK */
+.month {
+  display: none;
+  margin-bottom: 40px;
+  padding: 20px;
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 12px;
+  background: rgba(255,255,255,0.03);
+}
 
-    button:hover {
-      background: rgba(255,255,255,0.1);
-    }
+.month.active {
+  display: block;
+}
 
-    .feedback {
-      margin-top: 10px;
-      font-size: 0.85rem;
-      opacity: 0.8;
-    }
+/* INPUT */
+input {
+  width: 80%;
+  padding: 10px;
+  background: #000;
+  border: 1px solid #666;
+  color: #fff;
+  text-align: center;
+  letter-spacing: 2px;
+}
 
-    .success {
-      color: #7affc9;
-    }
+button {
+  margin-top: 10px;
+  padding: 8px 20px;
+  background: transparent;
+  border: 1px solid #888;
+  color: #fff;
+  cursor: pointer;
+}
 
-    .error {
-      color: #ff7a7a;
-    }
-  </style>
+/* FEEDBACK */
+.feedback {
+  margin-top: 12px;
+  font-size: 0.85rem;
+}
+
+/* PULSE */
+.pulse {
+  animation: pulse 0.6s;
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 rgba(255,255,255,0); }
+  50% { box-shadow: 0 0 12px rgba(255,0,0,0.6); }
+  100% { box-shadow: 0 0 0 rgba(255,255,255,0); }
+}
+
+.success {
+  color: #7affc9;
+}
+
+.error {
+  color: #ff7a7a;
+}
+</style>
 </head>
 
 <body>
-  <div class="container">
-    <h1>SUBJECT 13 · SIGNAL INTAKE</h1>
 
-    <!-- JANUARY -->
-    <div class="month active" id="month-1">
-      <div class="riddle">
-        Month One Transmission<br><br>
-        “I am present before words are written.  
-        I witness plans before they are lived.  
-        I keep what time has not yet taken.”
-      </div>
+<div class="moon"></div>
+<div class="subliminal">SUBJECT 13 OBSERVES</div>
 
-      <input type="text" id="answer-1" placeholder="Enter response" />
-      <br>
-      <button onclick="checkAnswer(1)">Transmit</button>
-      <div class="feedback" id="feedback-1"></div>
-    </div>
+<div class="container">
+<h1>TRANSMISSION INTERFACE</h1>
 
-    <!-- FEBRUARY (hidden until unlocked) -->
-    <div class="month" id="month-2">
-      <div class="riddle">
-        Month Two Transmission<br><br>
-        “I warm without flame.  
-        I comfort without voice.  
-        I remain when the world grows cold.”
-      </div>
+<!-- MONTH 1 -->
+<div class="month active" id="m1">
+  <p>I exist before the first page is filled.</p>
+  <input id="a1">
+  <br>
+  <button onclick="check(1)">Transmit</button>
+  <div class="feedback" id="f1"></div>
+</div>
 
-      <input type="text" id="answer-2" placeholder="Enter response" />
-      <br>
-      <button onclick="checkAnswer(2)">Transmit</button>
-      <div class="feedback" id="feedback-2"></div>
-    </div>
+<!-- MONTH 2 -->
+<div class="month" id="m2">
+  <p>I warm without flame.</p>
+  <input id="a2">
+  <br>
+  <button onclick="check(2)">Transmit</button>
+  <div class="feedback" id="f2"></div>
+</div>
 
-  </div>
+<!-- MONTH 3 -->
+<div class="month" id="m3">
+  <p>I burn, but never consume.</p>
+  <input id="a3">
+  <br>
+  <button onclick="check(3)">Transmit</button>
+  <div class="feedback" id="f3"></div>
+</div>
 
-  <script>
-    const answers = {
-      1: "JOURNAL",
-      2: "SOCKS"
-    };
+<!-- MONTH 4 -->
+<div class="month" id="m4">
+  <p>I travel, yet stay with you.</p>
+  <input id="a4">
+  <br>
+  <button onclick="check(4)">Transmit</button>
+  <div class="feedback" id="f4"></div>
+</div>
 
-    function checkAnswer(month) {
-      const input = document.getElementById("answer-" + month).value
-        .trim()
-        .toUpperCase();
+<!-- MONTH 5 -->
+<div class="month" id="m5">
+  <p>I live, yet remain rooted.</p>
+  <input id="a5">
+  <br>
+  <button onclick="check(5)">Transmit</button>
+  <div class="feedback" id="f5"></div>
+</div>
 
-      const feedback = document.getElementById("feedback-" + month);
+<!-- MONTH 6 -->
+<div class="month" id="m6">
+  <p>I am full when you hear the howls.</p>
+  <input id="a6">
+  <br>
+  <button onclick="check(6)">Transmit</button>
+  <div class="feedback" id="f6"></div>
+</div>
 
-      if (input === answers[month]) {
-        feedback.innerHTML = "Transmission accepted.";
-        feedback.className = "feedback success";
+</div>
 
-        const nextMonth = document.getElementById("month-" + (month + 1));
-        if (nextMonth) {
-          nextMonth.classList.add("active");
-        }
-      } else {
-        feedback.innerHTML = "Signal rejected.";
-        feedback.className = "feedback error";
-      }
-    }
-  </script>
+<script>
+const answers = {
+  1: "JOURNAL",
+  2: "SOCKS",
+  3: "CANDLE",
+  4: "BOTTLE",
+  5: "PLANT",
+  6: "MOON"
+};
+
+function check(n) {
+  const input = document.getElementById("a"+n);
+  const val = input.value.trim().toUpperCase();
+  const feedback = document.getElementById("f"+n);
+
+  input.classList.remove("pulse");
+  void input.offsetWidth;
+  input.classList.add("pulse");
+
+  if (val === answers[n]) {
+    feedback.textContent = "Transmission accepted.";
+    feedback.className = "feedback success";
+
+    // SEND LOG (Formspree placeholder)
+    fetch("https://formspree.io/f/XXXXXXXX", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ month: n, answer: val })
+    });
+
+    const next = document.getElementById("m"+(n+1));
+    if (next) next.classList.add("active");
+  } else {
+    feedback.textContent = "Signal rejected.";
+    feedback.className = "feedback error";
+  }
+}
+</script>
+
 </body>
 </html>
