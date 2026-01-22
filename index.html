@@ -189,19 +189,30 @@ function render() {
       <p>— Subject 13</p>
     `;
     app.appendChild(final);
+
+    console.log(
+      "[TRANSMISSION COMPLETE] YOU SAW ME FROM THE MOON YOU LOOKED BACK WITHOUT KNOWING WHY"
+    );
   }
 
   renderMoons();
 }
 
-/* CHECK ANSWER */
+/* CHECK ANSWER — WITH HIDDEN LOGGING */
 function checkAnswer(input) {
   const value = input.value.trim().toUpperCase();
+  const expected = months[currentMonth];
 
-  if (value === months[currentMonth]) {
+  if (value === expected) {
+    console.log(
+      `[TRANSMISSION] Month ${currentMonth + 1} | Input: "${value}" | Result: ACCEPTED`
+    );
     currentMonth++;
     render();
   } else {
+    console.log(
+      `[TRANSMISSION] Month ${currentMonth + 1} | Input: "${value}" | Result: REJECTED`
+    );
     input.classList.remove("wrong");
     void input.offsetWidth;
     input.classList.add("wrong");
