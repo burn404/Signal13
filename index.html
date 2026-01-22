@@ -1,169 +1,143 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Signal Archive</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Transmission Log</title>
 
 <style>
-html, body {
+:root {
+  --bg: #05060b;
+  --moon: #e6e6e6;
+  --dim: rgba(255,255,255,0.25);
+}
+
+* { box-sizing: border-box; }
+
+body {
   margin: 0;
-  padding: 0;
-  background: radial-gradient(circle at top, #050714, #000);
-  color: #eaeaff;
-  font-family: "Courier New", monospace;
+  min-height: 100vh;
+  background: radial-gradient(circle at top, #0b0d18, #05060b 70%);
+  color: #eaeaea;
+  font-family: "Segoe UI", system-ui, sans-serif;
   overflow-x: hidden;
 }
 
-/* STARFIELD */
+/* STAR FIELD */
 body::before {
   content:"";
-  position:fixed;
-  inset:0;
+  position: fixed;
+  inset: 0;
   background:
-    radial-gradient(1px 1px at 10% 20%, #fff, transparent),
-    radial-gradient(1px 1px at 80% 30%, #fff, transparent),
-    radial-gradient(1px 1px at 50% 70%, #fff, transparent),
-    radial-gradient(2px 2px at 30% 80%, #aaa, transparent),
-    radial-gradient(1px 1px at 70% 90%, #fff, transparent);
-  opacity:0.6;
-  animation: drift 90s linear infinite;
-  z-index:-2;
+    radial-gradient(1px 1px at 20% 30%, white, transparent),
+    radial-gradient(1px 1px at 80% 40%, white, transparent),
+    radial-gradient(1px 1px at 60% 80%, white, transparent),
+    radial-gradient(1px 1px at 40% 60%, white, transparent);
+  opacity: 0.2;
+  animation: drift 80s linear infinite;
+  pointer-events: none;
 }
 
 @keyframes drift {
   from { transform: translateY(0); }
-  to { transform: translateY(-200px); }
-}
-
-/* LARGE MOON */
-.big-moon {
-  position:fixed;
-  top:8%;
-  right:10%;
-  width:160px;
-  height:160px;
-  background: radial-gradient(circle at 30% 30%, #fff, #999);
-  border-radius:50%;
-  opacity:0.12;
-  filter: blur(1px);
-  z-index:-1;
+  to { transform: translateY(-300px); }
 }
 
 /* CONTAINER */
-.container {
-  max-width:620px;
-  margin:auto;
-  padding:70px 20px 40px;
-  text-align:center;
+#app {
+  max-width: 420px;
+  margin: 0 auto;
+  padding: 40px 20px 120px;
+  text-align: center;
 }
 
 /* MONTH CARD */
 .month {
-  display:none;
-  padding:22px;
-  border:1px solid rgba(255,255,255,0.25);
-  border-radius:14px;
+  margin-bottom: 30px;
+  padding: 25px;
+  border-radius: 14px;
   background: rgba(255,255,255,0.04);
-  box-shadow: 0 0 20px rgba(255,255,255,0.04);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 0 30px rgba(255,255,255,0.05);
 }
 
-.month.active {
-  display:block;
-  animation: fadeIn 1s ease;
+.month h2 {
+  margin: 0 0 12px;
+  letter-spacing: 0.12em;
+  font-weight: 500;
+  opacity: 0.9;
 }
 
-@keyframes fadeIn {
-  from { opacity:0; transform: translateY(10px); }
-  to { opacity:1; transform: translateY(0); }
-}
-
-/* INPUT */
 input {
-  width:80%;
-  padding:10px;
-  background:#000;
-  border:1px solid #666;
-  color:#fff;
-  text-align:center;
-  letter-spacing:3px;
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  background: transparent;
+  border: 1px solid var(--dim);
+  border-radius: 8px;
+  color: white;
+  text-align: center;
+  letter-spacing: 0.2em;
 }
 
-/* BUTTON */
-button {
-  margin-top:12px;
-  padding:8px 22px;
-  background:transparent;
-  border:1px solid #aaa;
-  color:#fff;
-  cursor:pointer;
+input:focus {
+  outline: none;
+  border-color: var(--moon);
 }
 
-/* FEEDBACK */
-.feedback {
-  margin-top:12px;
-  font-size:0.85rem;
-}
-
-/* PULSE */
-.pulse {
-  animation:pulse 0.6s;
+/* WRONG ANSWER PULSE */
+.wrong {
+  animation: pulse 0.4s ease;
+  border-color: #ff5f5f !important;
 }
 
 @keyframes pulse {
-  0% { box-shadow:0 0 0 transparent; }
-  50% { box-shadow:0 0 14px rgba(255,255,255,0.6); }
-  100% { box-shadow:0 0 0 transparent; }
+  0% { box-shadow: 0 0 0 rgba(255,0,0,0); }
+  50% { box-shadow: 0 0 12px rgba(255,0,0,0.6); }
+  100% { box-shadow: 0 0 0 rgba(255,0,0,0); }
 }
 
 /* PROGRESS MOONS */
-#progress {
-  display:flex;
-  justify-content:center;
-  gap:8px;
-  margin-top:26px;
+#moon-progress {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
 }
 
-.progress-moon {
-  width:12px;
-  height:12px;
-  border-radius:50%;
-  background: radial-gradient(circle at 30% 30%, #fff, #777);
-  opacity:0.35;
+.moon {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #333;
+  opacity: 0.3;
+}
+
+.moon.active {
+  background: radial-gradient(circle at 30% 30%, #fff, #ccc, #777);
+  opacity: 1;
+  box-shadow: 0 0 10px rgba(255,255,255,0.6);
+}
+
+/* FINAL MESSAGE */
+#final {
+  display: none;
+  margin-top: 40px;
+  line-height: 1.6;
+  opacity: 0.9;
 }
 </style>
 </head>
 
 <body>
-
-<div class="big-moon"></div>
-
-<div class="container">
-
-  <!-- MONTHS -->
-  <div id="months"></div>
-
-  <!-- PROGRESS -->
-  <div id="progress"></div>
-</div>
+<div id="app"></div>
+<div id="moon-progress"></div>
 
 <script>
-const riddles = [
-  "I keep what is not yet lived.",
-  "I walk where you do, unseen.",
-  "I burn without hunger.",
-  "I travel, yet stay with you.",
-  "I live, yet remain rooted.",
-  "I am full when you hear the howls.",
-  "I return when you are noticed.",
-  "I meet skin before the world.",
-  "I open what waits quietly.",
-  "I remain when warmth is needed.",
-  "I record what gratitude sees.",
-  "I soften the end of days."
-];
-
-const answers = [
+/* LOCKED ANSWERS — DO NOT CHANGE */
+const months = [
   "YOU",
   "SAW",
   "ME",
@@ -178,50 +152,76 @@ const answers = [
   "WHY"
 ];
 
-const monthsContainer = document.getElementById("months");
+let currentMonth = 0;
 
-for (let i = 0; i < 12; i++) {
-  const div = document.createElement("div");
-  div.className = "month" + (i === 0 ? " active" : "");
-  div.id = "m" + (i + 1);
-  div.innerHTML = `
-    <p>${riddles[i]}</p>
-    <input id="a${i+1}">
-    <br>
-    <button onclick="check(${i+1})">Transmit</button>
-    <div class="feedback" id="f${i+1}"></div>
-  `;
-  monthsContainer.appendChild(div);
+/* RENDER */
+function render() {
+  const app = document.getElementById("app");
+  app.innerHTML = "";
+
+  if (currentMonth < months.length) {
+    const div = document.createElement("div");
+    div.className = "month";
+    div.innerHTML = `
+      <h2>TRANSMISSION ${currentMonth + 1}</h2>
+      <input id="answer" placeholder="ENTER SIGNAL" autocomplete="off"/>
+    `;
+    app.appendChild(div);
+
+    const input = document.getElementById("answer");
+    input.addEventListener("keydown", e => {
+      if (e.key === "Enter") checkAnswer(input);
+    });
+  } else {
+    const final = document.createElement("div");
+    final.id = "final";
+    final.style.display = "block";
+    final.innerHTML = `
+      <p>You were not supposed to arrive here.</p>
+      <p>The probability of twelve correct transmissions was low.</p>
+      <p>Yet you persisted.</p>
+      <p>I have been observing from a distance.</p>
+      <p>Not because I am afraid.</p>
+      <p>But because interference alters outcomes.</p>
+      <p>In my world, we do not reveal ourselves.</p>
+      <p>We send signals instead.</p>
+      <p>If this message resonates,<br>know that it was meant for you.</p>
+      <p>— Subject 13</p>
+    `;
+    app.appendChild(final);
+  }
+
+  renderMoons();
 }
 
-function check(n) {
-  const input = document.getElementById("a"+n);
-  const feedback = document.getElementById("f"+n);
-  const val = input.value.trim().toUpperCase();
+/* CHECK ANSWER */
+function checkAnswer(input) {
+  const value = input.value.trim().toUpperCase();
 
-  input.classList.remove("pulse");
-  void input.offsetWidth;
-  input.classList.add("pulse");
-
-  if (val === answers[n-1]) {
-    feedback.textContent = "Transmission accepted.";
-
-    document.getElementById("m"+n).classList.remove("active");
-
-    const moon = document.createElement("div");
-    moon.className = "progress-moon";
-    document.getElementById("progress").appendChild(moon);
-
-    if (n < 12) {
-      document.getElementById("m"+(n+1)).classList.add("active");
-    } else {
-      window.location.href = "404.html";
-    }
+  if (value === months[currentMonth]) {
+    currentMonth++;
+    render();
   } else {
-    feedback.textContent = "Signal rejected.";
+    input.classList.remove("wrong");
+    void input.offsetWidth;
+    input.classList.add("wrong");
   }
 }
-</script>
 
+/* MOON PHASE PROGRESS */
+function renderMoons() {
+  const container = document.getElementById("moon-progress");
+  container.innerHTML = "";
+
+  months.forEach((_, i) => {
+    const m = document.createElement("div");
+    m.className = "moon";
+    if (i < currentMonth) m.classList.add("active");
+    container.appendChild(m);
+  });
+}
+
+render();
+</script>
 </body>
 </html>
